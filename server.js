@@ -13,10 +13,17 @@ const {Carrito} = require('./Carrito');
 
 let administrador = false;
 let productos = [];
+let carritos = [];
+
+let carrito = new Carrito(
+  carritos.length + 1,
+  Date.now()        
+);
+
 
 routerProductos.get("/listar/:id?", (req, res) => {
   if (req.params.id) {
-    let producto = productos.filter(function (producto) {
+    let producto = productos.filter( producto => {
       return producto.id == req.params.id;
     });
 
@@ -70,7 +77,7 @@ routerProductos.put('/actualizar/:id', (req, res) => {
 
 routerProductos.delete('/borrar/:id', (req, res) => {
   const id = parseInt(req.params.id);  
-  const producto = productos.filter(function (producto) {
+  const producto = productos.filter( producto => {
     return producto.id == id;
   });
   
@@ -78,7 +85,7 @@ routerProductos.delete('/borrar/:id', (req, res) => {
     res.send( { error: "No existe el producto" });
   }
     
-  productos = productos.filter(function (producto) {
+  productos = productos.filter( producto => {
     return producto.id != id;
   });
 
@@ -86,15 +93,46 @@ routerProductos.delete('/borrar/:id', (req, res) => {
 });
 
 routerCarrito.get('/listar/:id?', (req, res) => {
-    res.send( { ep: "carrito/listar" });
+  let productoId = req.params.id;
+
+  if (productoId) {
+    let producto = carrito.getProductoById(productoId);
+    let response = producto.length > 0 ? producto : { error: "producto no encontrado" };
+    res.send(response);
+  }
+
+  res.send( carrito.getProductos() );
 });
 
 routerCarrito.post('/agregar/:id_producto', (req, res) => {
-    res.send( { ep: "carrito/agregar" });
+  
+  let nuevoProducto = productos.filter( producto => {
+    return producto.id == req.params.id_producto;
+  });
+
+  if(!nuevoProducto.length){
+    res.send({ error: "producto no encontrado" });
+  } else {
+
+    carrito.agregarProducto(nuevoProducto[0]);  
+    res.send( carrito.getProductos() );
+  }  
 });
 
 routerCarrito.delete('/borrar/:id', (req, res) => {
-    res.send( { ep: "carrito/borrar" });
+    let id = req.params.id;
+
+    if(id){    
+      let producto = carrito.getProductoById(id);  
+
+      if(!producto){
+        res.send({ error: "producto no encontrado" });
+      }      
+      carrito.borrarProducto(id);
+    } else {
+      res.send({ error: "producto no encontrado" });
+    }
+    res.send({ succes: "producto borrado correctamente"});
 });
 
 app.use('/productos', routerProductos);
