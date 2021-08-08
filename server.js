@@ -8,37 +8,81 @@ const puerto = 8080;
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-/**
- *  producto: { 
- *      id: 1, 
- *      timestamp: '1628354136', 
- *      nombre: 'Ble', 
- *      descripcion 'Producto ble', 
- *      código '123456', 
- *      foto '/img/ble.png', 
- *      precio: 300, 
- *      stock: 10
- *  }
- */
+const {Producto} = require('./Producto');
+const {Carrito} = require('./Carrito');
 
 let administrador = false;
 let productos = [];
-let producto;
 
-routerProductos.get('/listar/:id?', (req, res) => {
-    res.send( { ep: "productos/listar" });
+routerProductos.get("/listar/:id?", (req, res) => {
+  if (req.params.id) {
+    let producto = productos.filter(function (producto) {
+      return producto.id == req.params.id;
+    });
+
+    let response = producto.length > 0 ? producto : { error: "producto no encontrado" };
+
+    res.send(response);
+  }
+
+  res.send({ productos });
 });
 
 routerProductos.post('/agregar', (req, res) => {
-    res.send( { ep: "productos/agregar" });
+    let nuevoProducto = req.body;
+    let timestamp = Date.now();
+    
+    let producto = new Producto(
+        productos.length + 1,
+        timestamp,
+        nuevoProducto.nombre,
+        nuevoProducto.descripcion,
+        nuevoProducto.codigo,
+        nuevoProducto.foto,
+        nuevoProducto.precio,
+        nuevoProducto.stock
+    );
+
+    productos.push(producto);
+
+    res.send( producto );
 });
 
-routerProductos.put('/actualizar/:id', (req, res) => {  
-    res.send( { ep: "productos/actualizar" });
+routerProductos.put('/actualizar/:id', (req, res) => {
+    
+    const id = parseInt(req.params.id);
+
+    const { nombre, descripcion, codigo, foto, precio, stock } = req.body;
+    let timestamp = Date.now();    
+  
+    const producto = productos.filter(function (producto) {
+      return producto.id === id;
+    });
+  
+    if (!producto.length) {
+      res.send({ error: "No existe el producto" });
+    }
+  
+    productos.splice(id - 1, 1, { id, timestamp, nombre, descripcion, codigo, foto, precio, stock });
+  
+    res.send({ id, timestamp, nombre, descripcion, codigo, foto, precio, stock });    
 });
 
 routerProductos.delete('/borrar/:id', (req, res) => {
-    res.send( { ep: "productos/borrar" });
+  const id = parseInt(req.params.id);  
+  const producto = productos.filter(function (producto) {
+    return producto.id == id;
+  });
+  
+  if(!producto.length){
+    res.send( { error: "No existe el producto" });
+  }
+    
+  productos = productos.filter(function (producto) {
+    return producto.id != id;
+  });
+
+  res.send(producto);
 });
 
 routerCarrito.get('/listar/:id?', (req, res) => {
