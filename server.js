@@ -21,7 +21,58 @@ const {Producto} = require('./Producto');
 const {Carrito} = require('./Carrito');
 
 let administrador = false;
-let productos = [];
+let productos = [
+  {
+    "id": 1,
+    "timestamp": 1628548996431,
+    "nombre": "Bicicleta Rodado 28 Sunny Comet",
+    "descripcion": "Bicicleta Rodado 28” Sunny Comet",
+    "codigo": "200445566",
+    "foto": "bici.jpeg",
+    "precio": 54990,
+    "stock": 16
+},
+{
+    "id": 2,
+    "timestamp": 1628548997319,
+    "nombre": "Campera Nylon Ultraliviana Kappa",
+    "descripcion": "Campera Nylon ultraliviana marca kappa.",
+    "codigo": "Rs20033366",
+    "foto": "campera.jpeg",
+    "precio": 11000,
+    "stock": 12
+},
+{
+    "id": 3,
+    "timestamp": 1628548998333,
+    "nombre": "Gimnasio Multifunción",
+    "descripcion": "Gimnasio Multifunción C/ Polea Dorsalera Remo",
+    "codigo": "12sdfsd3456",
+    "foto": "gym.jpeg",
+    "precio": 31500,
+    "stock": 14
+},
+{
+    "id": 4,
+    "timestamp": 1628548999124,
+    "nombre": "Kit Caja Set Herramientas Llave 72 Piezas",
+    "descripcion": "Caja herramientas 72 piezas.Importada de excelente calidad",
+    "codigo": "25886333",
+    "foto": "herramientas.jpeg",
+    "precio": 14300,
+    "stock": 26
+},
+{
+    "id": 5,
+    "timestamp": 1628548999880,
+    "nombre": "Cafetera Nespresso Modelo Inissia",
+    "descripcion": "Empezá tu día con energía y de la mejor manera, disfrutando de la textura y calidad de un buen café en la comodidad de tu casa.",
+    "codigo": "ne5556663315",
+    "foto": "nespresso.jpg",
+    "precio": 14000,
+    "stock": 12
+}
+];
 let carritos = [];
 
 let carrito = new Carrito(
@@ -61,6 +112,7 @@ routerProductos.post('/agregar', (req, res) => {
 
     productos.push(producto);
 
+    
     res.send( producto );
 });
 
