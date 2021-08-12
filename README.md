@@ -48,3 +48,65 @@ ej
 4. La estructura de programación será ECMAScript, separada tres en módulos básicos (router, lógica de negocio/api y persistencia ). Más adelante implementaremos el desarrollo en capas. Utilizar preferentemente clases, constructores de variables let y const y arrow function.
 
 5. Realizar la prueba de funcionalidad completa en el ámbito local (puerto 8080) y en glitch.com
+
+
+### Ejemplo para consumir el EP que lista productos:
+
+```
+curl --location --request GET 'localhost:8080/productos/listar/' \
+--data-raw ''
+```
+
+### Ejemplo para consumir el EP que incorpora un producto al listado:
+
+```
+curl --location --request POST 'localhost:8080/productos/agregar' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "nombre": "Micro Procesador Amd Ryzen 7 3800xt 4.7ghz",
+    "descripcion": "Amd Ryzen 7 3800XT 4.7 Ghz - AM4 Sin Video Sin Cooler",
+    "codigo": "bfgg55555666",
+    "foto": "/assets/img/ryzen7.jpg",
+    "precio": 49500,
+    "stock": 23
+}'
+```
+
+### Ejemplo para consumir el EP que actualiza un producto por su id:
+
+```
+curl --location --request PUT 'localhost:8080/productos/actualizar/1' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "nombre": "Perro",
+    "descripcion": "fdwsfdsfsd",
+    "codigo": "12sdfsd3456",
+    "foto": "/img/ble.fsdfpng",
+    "precio": 400,
+    "stock": 50
+}'
+```
+
+### Ejemplo para consumir el EP que borra un producto por su id:
+
+```
+curl --location --request DELETE 'localhost:8080/productos/borrar/1'
+```
+
+## Carrito:
+
+### Ejemplo para consumir el EP que lista todos los productos guardados en el carrito:
+
+```
+curl --location --request GET 'localhost:8080/carrito/listar/'
+```
+### Ejemplo para consumir el EP que incorpora productos al carrito por su id de producto:
+
+```
+curl --location --request POST 'localhost:8080/carrito/agregar/3'
+```
+### Ejemplo para consumir el EP que elimina un producto del carrito:
+
+```
+curl --location --request DELETE 'localhost:8080/carrito/borrar/2'
+```
